@@ -23,3 +23,17 @@ highlight_code = true
 
 # Your email address showed in the contact section
 email = "rigarash[at]gmail.com"
+
+# Image of your avatar displayed on the landing page
+avatar = "static/img/mii.png"
+# Image of the favicon
+favicon = "static/img/mii.png"
+
+# If you don't want to show your contact information in the index
+contact_in_index = true
+
+# Additional menu items
+# `Name` is what it is displayed, `path` is the url
+menu_items = [
+  { path = "#contacts", name = "Contact" },
+]
