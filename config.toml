@@ -37,3 +37,6 @@ contact_in_index = true
 menu_items = [
   { path = "#contacts", name = "Contact" },
 ]
+
+# Whether to support KaTeX globally
+katex = true
