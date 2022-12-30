@@ -3,9 +3,9 @@
 # Variables
 
 title = "Home"
-date = 2022-12-23
+date = 2022-12-30
 
-description = ""
+description = "Self introduction of Ryo IGARASHI, Ph.D."
 
 # A draft section is only loaded if the `--drafts` flag is passed to `zola build`, `zola serve` or `zola check`.
 draft = false
@@ -84,6 +84,7 @@ title = "Research Scientist in Computational Condensed-Matter Physics, HPC, and 
 # The list of interests displayed
 interests = [
   "Computational Condensed-Matter Physics",
+  "Statistical Physics",
   "High Performance Computing",
   "Machine Learning"
 ]
@@ -94,8 +95,16 @@ interests = [
   institution = "Department of Physics, Faculty of Science, the University of Tokyo"
   year = 2009
 
+[[extra.education.cources]]
+  cource = "Bachelor"
+  institution = "Department of Physics, Faculty of Science, the University of Tokyo"
+  year = 2003
+
 # Finally, a list of icons with a link displayed below your avatar
 
+#[[extra.avatar_icons]]
+#  icon = "researchmap"
+#  link = "https://researchmap.jp/rigarash?lang=en"
 [[extra.avatar_icons]]
   icon = "github"
   link = "https://github.com/rigarash"
@@ -104,7 +113,7 @@ interests = [
   link = "https://gitlab.com/rigarash"
 [[extra.avatar_icons]]
   icon = "linkedin"
-  link = "https://www.linkedin.com/in/rigarash/"
+  link = "https://www.linkedin.com/in/rigarash"
 
 +++
 
