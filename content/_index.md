@@ -95,7 +95,7 @@ interests = [
   institution = "Department of Physics, Faculty of Science, the University of Tokyo"
   year = 2009
 
-[[extra.education.cources]]
+[[extra.education.courses]]
   course = "Bachelor"
   institution = "Department of Physics, Faculty of Science, the University of Tokyo"
   year = 2003
