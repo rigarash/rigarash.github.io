@@ -1,7 +1,7 @@
 CURRENT_UID := $(shell id -u)
 CURRENT_GID := $(shell id -g)
 
-ZENN_IMAGE := ghcr.info/rigarash/zenn:latest
+ZENN_IMAGE := ghcr.io/rigarash/zenn:latest
 
 all: preview
 
