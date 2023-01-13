@@ -1,4 +1,4 @@
-FROM node:current
+FROM node:current-slim
 RUN npm install -g zenn-cli
 WORKDIR /work
 ENTRYPOINT ["npx", "zenn"]
