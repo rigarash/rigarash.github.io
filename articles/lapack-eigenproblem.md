@@ -7,7 +7,7 @@ published: true
 published-at: 2022-12-07
 ---
 
-## はじめに {#Introduction}
+## はじめに
 
 この記事は[数値計算Advent Calendar 2022](https://qiita.com/advent-calendar/2022/numerical_analysis)の7日目の記事です。(Reblog by original author from https://www.rigarash.info/blog/lapack-eigenproblem/ )
 
@@ -29,7 +29,7 @@ LAPACKには固有値問題を解くための多様なルーチンがありま�
 
 [^2]: [応用数理学会](https://jsiam.org/)に[「行列・固有値問題の解法とその応用」](https://na.cs.tsukuba.ac.jp/mepa/)というその名もズバリな研究部会があります。
 
-## 固有値問題の基本 {#Eigenproblem_basics}
+## 固有値問題の基本
 
 $n \times n$ 行列 $A$ の固有値 $\lambda$ とは、固有方程式 $\| A - \lambda E \| = 0$ の解です。
 これは、係数が複素数(または実数)で $\lambda$ の $n$ 次方程式になっていますから、複素数の範囲で重複を含めてちょうど $n$ 個の解をもちます。5次以上の$n$ 次方程式には代数的解法(解の公式)は存在しませんから、これはつまり、固有値は数値的に近似解を求めていく必要があるということです。
@@ -45,17 +45,17 @@ LAPACKの実装で注意しなければならないのは、行列の要素が�
 
 行列積のBLASルーチンの選択の際、対称行列に一般行列のアルゴリズムを利用しても計算量が数倍増えるだけですが、固有値問題では実数か複素数かという大きな違いが生じるため、行列の性質を強く意識する必要があります。固有値と固有ベクトルがすべて実数になるのは、実対称行列か複素エルミート行列のときだけです。
 
-### (存在しない) ZSYEV {#ZSYEV}
+### (存在しない) ZSYEV
 
 LAPACKには複素対称行列に対する固有値ルーチンは存在しません。[Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)のCMakeLists.txtにはzsyev.fを読み込む部分処理があります[^3]が、これはバグです。複素対称行列は固有値が純虚数になる性質があり、2010年代から理論物理等の分野でたまに出てきますが、LAPACKのAPI設計時にはユースケースがあるとは思われていなかったためか、入っていません。もし複素対称行列の利用が広がってきて、純虚数のデータ構造をどうすべきかといった議論を乗り越えられれば、新規に標準化される可能性もあるのではないか、と思います。
 
 [^3]: EigenがAndroidにも含まれているので検索でたくさんひっかかります。
 
-## 固有値問題のアルゴリズム {#Eigenproblem_algorithm}
+## 固有値問題のアルゴリズム
 
 ざっくりというと、ハウスホルダー変換、ヘッセンベルグ行列(もしくは実対称か複素エルミートなら三重対角行列)の固有方程式の求解、ハウスホルダー逆変換の流れで行われます。詳しくは(私のような非専門家の解説ではなくて)書籍を読んでください。なお、ハウスホルダー変換などの(ある種)内部ルーチンもLAPACK関数になっているので、固有値ルーチン群は一見数が多いように見えますが、固有値の計算に関しては EV, EVD, EVX, EVR の4種類になります。Driver Routineと呼びます。
 
-### EV/EVD/EVX/EVR の違い {#EV_EVD_EVX_EVR_differences}
+### EV/EVD/EVX/EVR の違い
 
 三重対角行列の固有方程式の求解部分に差があります。表にまとめると、下のようになります。
 
@@ -70,7 +70,7 @@ LAPACKには複素対称行列に対する固有値ルーチンは存在しま�
 
 実際に、Intel MKLのマニュアルをきちんと読むと、例えばsyevrのreferenceには"[Note that ?syevr is preferable for most cases of real symmetric eigenvalue problems as its underlying algorithm is fast and uses less workspace.](https://www.intel.com/content/www/us/en/develop/documentation/onemkl-developer-reference-c/top/lapack-routines/lapack-least-squares-and-eigenvalue-problem/lapack-least-squares-eigenvalue-problem-driver/symmetric-eigenvalue-problems-lapack-driver/syevr.html#syevr)"(EVRを使え)と書いてあります。
 
-## 実際の使い方を学ぶ方法 (#Usage)
+## 実際の使い方を学ぶ方法
 
 これだけでも本の1章分くらいは書けそうですが、ざっくりとまとめると、使い方を学ぶかしかないです。解読しやすいコードとしては、以下のような感じでしょうか。(Fortran95のAPIは使いやすいのでそのまま使えば良いです。)
 
