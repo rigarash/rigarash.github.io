@@ -9,7 +9,7 @@ published-at: 2022-12-07
 
 ## はじめに
 
-この記事は[数値計算Advent Calendar 2022](https://qiita.com/advent-calendar/2022/numerical_analysis)の7日目の記事です。(Reblog by original author from https://www.rigarash.info/blog/lapack-eigenproblem/ )
+この記事は[数値計算Advent Calendar 2022](https://qiita.com/advent-calendar/2022/numerical_analysis)の7日目の記事です。(Reblog by original author from <https://www.rigarash.info/blog/lapack-eigenproblem/> )
 
 ```FORTRAN
 DSYEV, SSYEVD, CHEEVX, ZHEEVR, SGEEVR...
