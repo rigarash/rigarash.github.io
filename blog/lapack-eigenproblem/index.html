@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  
+  <link rel="shortcut icon" href="https:&#x2F;&#x2F;www.rigarash.info&#x2F;processed_images&#x2F;mii.02fb1c0bc1680afa.png" type="image/png">
+  <link rel="icon" href="https:&#x2F;&#x2F;www.rigarash.info&#x2F;processed_images&#x2F;mii.02fb1c0bc1680afa.png" type="image/png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta charset="utf-8">
+
+  <!-- Custom header for users, includes custom css or js here -->
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true},
+            {left: "\\begin{align}", right: "\\end{align}", display: true},
+            {left: "\\begin{alignat}", right: "\\end{alignat}", display: true},
+            {left: "\\begin{gather}", right: "\\end{gather}", display: true},
+            {left: "\\begin{CD}", right: "\\end{CD}", display: true},
+            {left: "\\[", right: "\\]", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+    });
+</script>
+
+<link rel="stylesheet" href="/footnotes.css">
+<script src="/fix-footnotes.js"></script>
+<title> Ryo IGARASHI, Ph.D.</title>
+
+  
+<!-- CSS -->
+<link rel="stylesheet" href="https://www.rigarash.info/styles/styles.css" />
+
+    <title>Blog |  Ryo IGARASHI, Ph.D.</title>
+</head>
+
+<body class="bg-white">
+  <!-- Top nav bar -->
+  
+  
+  
+<nav id="header" class="w-full z-10 top-0 shadow-md mx-0">
+  <div id="progress" class="top-0"></div>
+  <!-- <div class="w-full max-w-5xl mx-auto flex flex-wrap items-center justify-between mt-0 py-2  sm:bg-green-900 md:bg-red-900 lg:bg-blue-900 bg-yellow-900"> -->
+  <div class="w-full max-w-4xl mx-auto flex sm:flex-nowrap flex-wrap items-center justify-between mt-0 py-2">
+    <div class="pl-4">
+      <a class="text-gray-900 text-base no-underline hover:no-underline font-extrabold" href="https:&#x2F;&#x2F;www.rigarash.info">
+        Ryo IGARASHI, Ph.D.
+      </a>
+    </div>
+
+    <div class="w-full flex-grow sm:flex sm:items-center flex-wrap sm:flex-nowrap sm:w-auto sm:block mt-2 sm:mt-0 bg-transparent z-20" id="nav-content">
+      <ul class="list-reset flex flex-wrap sm:justify-end flex-1 items-center">
+          <li class="mr-3 text-sm">
+              <a href=https://www.rigarash.info/blog class="inline-block py-2 px-4 text-sky-600 font-bold no-underline">
+                Blog
+              </a>
+            </li>
+            <li class="mr-3 text-sm">
+            <a href=https://www.rigarash.info/#contacts class="inline-block text-gray-600 no-underline hover:text-gray-900 hover:text-underline py-2 px-4">
+              Contact
+            </a>
+          </li>
+          </ul>
+    </div>
+  </div>
+
+</nav>
+
+<!-- Container -->
+  
+<div class="container max-w-3xl mx-auto px-4">
+  <div class="pt-8 flex flex">
+    <h1 class="grow font-bold font-sans break-normal text-gray-900 text-3xl">固有値問題におけるLAPACKルーチンの選び方</h1>
+    <p class="text-sm md:text-base font-normal text-gray-600 py-2">Published 2022-12-07</p>
+  </div>
+  <hr class="border-b-1 border-gray-400 mb-8">
+  
+  <article class="prose prose-indigo prose max-w-3xl">
+    <h2 id="Introduction">はじめに<a class="zola-anchor" href="#Introduction" aria-label="Anchor link for: Introduction">🔗</a></h2>
+<p>この記事は<a href="https://qiita.com/advent-calendar/2022/numerical_analysis">数値計算Advent Calendar 2022</a>の7日目の記事です。</p>
+<pre data-lang="FORTRAN" style="background-color:#2b303b;color:#c0c5ce;" class="language-FORTRAN "><code class="language-FORTRAN" data-lang="FORTRAN"><span>DSYEV, SSYEVD, CHEEVX, ZHEEVR, SGEEVR...
+</span></code></pre>
+<p>LAPACKには固有値問題を解くための多様なルーチンがあります。過去との互換性をとるためにどんどん複雑になっていますが、実は基本を押さえればどのルーチンを選ぶかは簡単です。</p>
+<p>ここでは2022年現在<sup class="footnote-reference"><a href="#1">1</a></sup>、固有値問題を解く際のLAPACKルーチン選択の方法を概説します。</p>
+<p><strong>tl;dr <em><strong>xyyEVR</strong></em> を使えばOK! (x=S,D,C,Z yy=SY,HE,GE)</strong></p>
+<p>基本はこれだけです。ただし、固有値問題の基本とアルゴリズムの背景についても利用者にもわかってほしいので、ざっくりと解説します。</p>
+<p>なお、日本には固有値問題の専門家が多数いらっしゃいます<sup class="footnote-reference"><a href="#2">2</a></sup>し、日本語文献もたくさんありますので、アルゴリズムや実装に興味がある方はぜひドンドン沼にハマっていってください。</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>「2022年現在」と書いたもののここ<strong>20年</strong>は変わっていません。</p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p><a href="https://jsiam.org/">応用数理学会</a>に<a href="https://na.cs.tsukuba.ac.jp/mepa/">「行列・固有値問題の解法とその応用」</a>というその名もズバリな研究部会があります。</p>
+</div>
+<h2 id="Eigenproblem_basics">固有値問題の基本<a class="zola-anchor" href="#Eigenproblem_basics" aria-label="Anchor link for: Eigenproblem_basics">🔗</a></h2>
+<p>$n \times n$ 行列 $A$ の固有値 $\lambda$ とは、固有方程式 $| A - \lambda E | = 0$ の解です。
+これは、係数が複素数(または実数)で $\lambda$ の $n$ 次方程式になっていますから、複素数の範囲で重複を含めてちょうど $n$ 個の解をもちます。5次以上の$n$ 次方程式には代数的解法(解の公式)は存在しませんから、これはつまり、固有値は数値的に近似解を求めていく必要があるということです。</p>
+<p>LAPACKの実装で注意しなければならないのは、行列の要素が実数か複素数か、という点と、得られた固有値と固有ベクトルの成分が実数か複素数か、が<strong>一致しない</strong>、という点です。表はLAPACKルーチンの1文字目(行列 $A$ の成分)と2,3文字目(行列 $A$ の性質)と固有値/固有ベクトルの関係を示したものです。</p>
+<table><thead><tr><th>行列 $A$ の成分</th><th>行列 $A$ の性質</th><th>固有値 $\lambda$ の成分</th><th>固有ベクトル $v$ の成分</th></tr></thead><tbody>
+<tr><td>実数(S,D)</td><td>対称(SY)</td><td>実数</td><td>実数</td></tr>
+<tr><td>複素数(C,Z)</td><td>エルミート(HE)</td><td><strong>実数</strong></td><td><strong>実数</strong></td></tr>
+<tr><td>実数(S,D)</td><td>一般(GE)</td><td><strong>複素数</strong></td><td><strong>複素数</strong></td></tr>
+<tr><td>複素数(C,Z)</td><td>一般(GE)</td><td>複素数</td><td>複素数</td></tr>
+</tbody></table>
+<p>行列積のBLASルーチンの選択の際、対称行列に一般行列のアルゴリズムを利用しても計算量が数倍増えるだけですが、固有値問題では実数か複素数かという大きな違いが生じるため、行列の性質を強く意識する必要があります。固有値と固有ベクトルがすべて実数になるのは、実対称行列か複素エルミート行列のときだけです。</p>
+<h3 id="ZSYEV">(存在しない) ZSYEV<a class="zola-anchor" href="#ZSYEV" aria-label="Anchor link for: ZSYEV">🔗</a></h3>
+<p>LAPACKには複素対称行列に対する固有値ルーチンは存在しません。<a href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>のCMakeLists.txtにはzsyev.fを読み込む部分処理があります<sup class="footnote-reference"><a href="#3">3</a></sup>が、これはバグです。複素対称行列は固有値が純虚数になる性質があり、2010年代から理論物理等の分野でたまに出てきますが、LAPACKのAPI設計時にはユースケースがあるとは思われていなかったためか、入っていません。もし複素対称行列の利用が広がってきて、純虚数のデータ構造をどうすべきかといった議論を乗り越えられれば、新規に標準化される可能性もあるのではないか、と思います。</p>
+<div class="footnote-definition" id="3"><sup class="footnote-definition-label">3</sup>
+<p>EigenがAndroidにも含まれているので検索でたくさんひっかかります。</p>
+</div>
+<h2 id="Eigenproblem_algorithm">固有値問題のアルゴリズム<a class="zola-anchor" href="#Eigenproblem_algorithm" aria-label="Anchor link for: Eigenproblem_algorithm">🔗</a></h2>
+<p>ざっくりというと、ハウスホルダー変換、ヘッセンベルグ行列(もしくは実対称か複素エルミートなら三重対角行列)の固有方程式の求解、ハウスホルダー逆変換の流れで行われます。詳しくは(私のような非専門家の解説ではなくて)書籍を読んでください。なお、ハウスホルダー変換などの(ある種)内部ルーチンもLAPACK関数になっているので、固有値ルーチン群は一見数が多いように見えますが、固有値の計算に関しては EV, EVD, EVX, EVR の4種類になります。Driver Routineと呼びます。</p>
+<h3 id="EV_EVD_EVX_EVR_differences">EV/EVD/EVX/EVR の違い<a class="zola-anchor" href="#EV_EVD_EVX_EVR_differences" aria-label="Anchor link for: EV_EVD_EVX_EVR_differences">🔗</a></h3>
+<p>三重対角行列の固有方程式の求解部分に差があります。表にまとめると、下のようになります。</p>
+<table><thead><tr><th>名称</th><th>アルゴリズム</th><th>演算量</th><th>メモリ量</th></tr></thead><tbody>
+<tr><td>EV</td><td>QR</td><td>$6n^3$</td><td>$O(n)$</td></tr>
+<tr><td>EVX</td><td>bisection + inverse iteration</td><td>$O(n^2) \sim O(n^3)$</td><td>$O(n)$</td></tr>
+<tr><td>EVD</td><td>divide &amp; conquer</td><td>$O(n^2) \sim O(n^3)$</td><td>$n^2$</td></tr>
+<tr><td>EVR</td><td>MRRR</td><td>$O(n^2)$</td><td>$O(n)$</td></tr>
+</tbody></table>
+<p>アルゴリズム的にも、現実の実装においても、MRRR(えむあーるきゅーびっく)法を用いるのが多くの場合で最速ですし、精度もかなり良いです。MRRR($\textnormal{MR}^3$)法の詳細については、<a href="https://doi.org/10.11540/jsiamt.15.2_181">山本有作先生の解説</a>を見てください。</p>
+<p>実際に、Intel MKLのマニュアルをきちんと読むと、例えばsyevrのreferenceには&quot;<a href="https://www.intel.com/content/www/us/en/develop/documentation/onemkl-developer-reference-c/top/lapack-routines/lapack-least-squares-and-eigenvalue-problem/lapack-least-squares-eigenvalue-problem-driver/symmetric-eigenvalue-problems-lapack-driver/syevr.html#syevr">Note that ?syevr is preferable for most cases of real symmetric eigenvalue problems as its underlying algorithm is fast and uses less workspace.</a>&quot;(EVRを使え)と書いてあります。</p>
+<h2 id="shi-ji-noshi-ifang-woxue-bufang-fa-usage">実際の使い方を学ぶ方法 (#Usage)<a class="zola-anchor" href="#shi-ji-noshi-ifang-woxue-bufang-fa-usage" aria-label="Anchor link for: shi-ji-noshi-ifang-woxue-bufang-fa-usage">🔗</a></h2>
+<p>これだけでも本の1章分くらいは書けそうですが、ざっくりとまとめると、使い方を学ぶかしかないです。解読しやすいコードとしては、以下のような感じでしょうか。(Fortran95のAPIは使いやすいのでそのまま使えば良いです。)</p>
+<ol>
+<li>C
+<ul>
+<li><a href="https://www.intel.com/content/www/us/en/develop/documentation/onemkl-lapack-examples/top.html">Intel MKLのExample</a> を参考にする</li>
+</ul>
+</li>
+<li>C++
+<ul>
+<li>前職で開発したもので、宣伝になりますが、<a href="https://github.com/ricosjp/monolish/blob/master/src/internal/lapack/syev/dense_double_syev.cpp">monolish中のコード</a> を参考にする</li>
+</ul>
+</li>
+<li>Python
+<ul>
+<li><a href="https://github.com/scipy/scipy/blob/v1.9.3/scipy/linalg/_decomp.py#L267-L606">scipy.linalg.eigh()</a> の実装を見てLAPACKの使い方を学ぶ</li>
+</ul>
+</li>
+<li>Fortran(95以降)
+<ul>
+<li>Fortran 95のインターフェースで syevr(a, w) と呼ぶ</li>
+</ul>
+</li>
+</ol>
+
+  </article>
+</div>
+<!-- <div class="sticky bottom-0 px-3">
+    <a href="#page-top">Back to top of page</a>
+  </div> -->
+  <footer class="bg-white">
+    <div class="bg-white text-gray-400 container max-w-4xl mx-auto my-8 px-4">
+    © Ryo IGARASHI, Ph.D.. Template <a class="underline" target="_blank" href="https://github.com/adfaure/kodama-theme">Kodama</a> made with <a class="underline" target="_blank" href="https://getzola.org">zola</a>, inspired by <a class="underline" target="_blank" href="https://wowchemy.com/"> wowchemy</a> academic theme.
+    </div>
+  </footer>
+  </body>
+
+</html>
